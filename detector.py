@@ -1,9 +1,6 @@
 from .models.binoculars.binoculars import Binoculars
-from .models.dna_gpt.dna_gpt import DNAGPT
 from .models.detectgpt.detectgpt import DetectGPT
 from .models.fast_detectgpt.fast_detectgpt import FastDetectGPT
-from .models.gltr.gltr import GLTR
-from .models.llmdet.llmdet import LLMDet
 from .models.likelihood.likelihood import Likelihood
 from .models.rank.rank import Rank
 from .models.entropy.entropy import Entropy
@@ -14,7 +11,6 @@ from .models.min_k.min_k import MinK
 from .models.min_k_plus.min_k_plus import MinKPlus
 from .models.logit_based.logit_based import LogitBased
 from .models.recall.recall import Recall
-# from .models.con_recall.con_recall import ConRecall
 from .models.dc_pdd.dc_pdd import DCPDD
 from .models.lastde_doubleplus.lastde_doubleplus import LastdeDoublePlus
 
@@ -37,16 +33,12 @@ binoculars_llama_model_pair = {
 def get_detector(
     detector_name: str, base_model_name: str, ref_model_name: str, prefix: dict
 ) -> Detector:
-    if detector_name == "gltr":
-        return GLTR(base_model_name)
-    elif detector_name == "detectgpt":
+    if detector_name == "detectgpt":
         return DetectGPT(base_model_name)
     elif detector_name == "fastdetectgpt":
             return FastDetectGPT(False, base_model_name, base_model_name)
     elif detector_name == "fastdetectllm":
             return FastDetectGPT(True, base_model_name, base_model_name)
-    elif detector_name == "llmdet":
-        return LLMDet()
     elif detector_name == "binoculars":
         if base_model_name in binoculars_llama_model_pair:
             return Binoculars(binoculars_llama_model_pair[base_model_name], base_model_name)
@@ -60,8 +52,6 @@ def get_detector(
             return Binoculars("mosaicml/mpt-30b", base_model_name)
         elif "gpt2" in base_model_name:
             return Binoculars("lgaalves/gpt2-xl_lima", base_model_name)
-    elif detector_name == "dna_gpt":
-        return DNAGPT(base_model_name)
     elif detector_name == "logit_based":
         return LogitBased(base_model_name, ref_model_name)
     elif detector_name == "recall":
@@ -72,25 +62,3 @@ def get_detector(
         return LastdeDoublePlus(base_model_name)
     else:
         raise ValueError("Invalid detector name")
-
-
-    # elif detector_name == "likelihood":
-    #     return Likelihood(base_model_name)
-    # elif detector_name == "rank":
-    #     return Rank(base_model_name, False)
-    # elif detector_name == "logrank":
-    #     return Rank(base_model_name, True)
-    # elif detector_name == "entropy":
-    #     return Entropy(base_model_name)
-    # elif detector_name == "loss":
-    #     return Loss(base_model_name)
-    # elif detector_name == "ref":
-    #     return Reference(base_model_name, ref_model_name)
-    # elif detector_name == "zlib":
-    #     return Zlib(base_model_name)
-    # elif detector_name == "min_k":
-    #     return MinK(base_model_name)
-    # elif detector_name == "min_k_plus":
-    #     return MinKPlus(base_model_name)
-    # elif detector_name == "con_recall":
-    #     return ConRecall(base_model_name, prefix)
