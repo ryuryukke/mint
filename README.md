@@ -12,7 +12,7 @@
 </p> -->
 
 <h3 align="center"><i><b>
-A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.
+A unified evaluation suite for membership inference attacks (MIAs)<br>and machine-generated text detection.
 </b></i></h3>
 
 ## Quick Start
