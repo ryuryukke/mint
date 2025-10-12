@@ -1,5 +1,5 @@
 <p align="center">
-<img src="assets/mint_bar_.png" alt="MINT" width="600">
+<img src="assets/mint_bar.png" alt="MINT" width="600">
 </p>
 <p align="center">
   <a href="https://github.com/liamdugan/raid/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg"/></a>
