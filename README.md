@@ -10,7 +10,7 @@
   <a href="https://arxiv.org/abs/xxxxx.xxxxx"><img src="https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg"/></a>
 </p>
 <p align="center">
-<b>A unified python package for membership inference attacks (MIAs) and machine-generated text detection.
+<i><b>A unified python package for membership inference attacks (MIAs) and machine-generated text detection.</b></i>
 </p>
 
 ## Quick Start
@@ -19,50 +19,14 @@
 
 
 ## Methods
-We include 4 common baseline methods, 7 state-of-the-art MIAs, and 5 state-of-the-art machine text detectors:
+We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of-the-art machine text detectors**:
 
 | Category | Methods |
 |-----------|----------|
-| **Baselines** | Loss, Rank, LogRank, Entropy |
-| **MIAs** | [Reference](https://arxiv.org/abs/2012.07805), [Zlib](https://arxiv.org/abs/2012.07805), [Neighborhood](https://arxiv.org/abs/2305.18462), [Min-K%](https://arxiv.org/abs/2310.16789), [Min-K%++](https://arxiv.org/abs/2404.02936), [ReCaLL](https://arxiv.org/abs/2406.15968), [DC-PDD](https://arxiv.org/abs/2409.14781) |
-| **Detectors** | [DetectGPT](https://arxiv.org/abs/2301.11305), [Fast-DetectGPT](https://arxiv.org/abs/2310.05130), [Binoculars](https://arxiv.org/abs/2401.12070), [DetectLLM](https://arxiv.org/abs/2306.05540), [Lastde++](https://arxiv.org/abs/2410.06072) |
+| Baselines | Loss, Rank, LogRank, Entropy |
+| MIAs | [Reference](https://arxiv.org/abs/2012.07805), [Zlib](https://arxiv.org/abs/2012.07805), [Neighborhood](https://arxiv.org/abs/2305.18462), [Min-K%](https://arxiv.org/abs/2310.16789), [Min-K%++](https://arxiv.org/abs/2404.02936), [ReCaLL](https://arxiv.org/abs/2406.15968), [DC-PDD](https://arxiv.org/abs/2409.14781) |
+| Detectors | [DetectGPT](https://arxiv.org/abs/2301.11305), [Fast-DetectGPT](https://arxiv.org/abs/2310.05130), [Binoculars](https://arxiv.org/abs/2401.12070), [DetectLLM](https://arxiv.org/abs/2306.05540), [Lastde++](https://arxiv.org/abs/2410.06072) |
 
-<!-- <table align="center">
-  <thead>
-    <tr>
-      <th style="text-align:left;">Category</th>
-      <th style="text-align:center;">Methods</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align:left;"><b>Baselines</b></td>
-      <td style="text-align:center;">Loss, Rank, LogRank, Entropy</td>
-    </tr>
-    <tr>
-      <td style="text-align:left;"><b>MIAs</b></td>
-      <td style="text-align:center;">
-        <a href="https://arxiv.org/abs/2012.07805">Reference</a>, 
-        <a href="https://arxiv.org/abs/2012.07805">Zlib</a>, 
-        <a href="https://arxiv.org/abs/2305.18462">Neighborhood</a>, 
-        <a href="https://arxiv.org/abs/2310.16789">Min-K%</a>, 
-        <a href="https://arxiv.org/abs/2404.02936">Min-K%++</a>, 
-        <a href="https://arxiv.org/abs/2406.15968">ReCaLL</a>, 
-        <a href="https://arxiv.org/abs/2409.14781">DC-PDD</a>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left;"><b>Detectors</b></td>
-      <td style="text-align:center;">
-        <a href="https://arxiv.org/abs/2301.11305">DetectGPT</a>, 
-        <a href="https://arxiv.org/abs/2310.05130">Fast-DetectGPT</a>, 
-        <a href="https://arxiv.org/abs/2401.12070">Binoculars</a>, 
-        <a href="https://arxiv.org/abs/2306.05540">DetectLLM</a>, 
-        <a href="https://arxiv.org/abs/2410.06072">Lastde++</a>
-      </td>
-    </tr>
-  </tbody>
-</table> -->
 
 
 ## Running on your own dataset
