@@ -8,7 +8,7 @@
   <a href="https://arxiv.org/abs/xxxxx.xxxxx"><img src="https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg"/></a>
 </p>
 <p align="center">
-<i><b>A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.</b></i>
+<i><b><span style="font-size:20px;">A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.</span></b></i>
 </p>
 
 ## Quick Start
@@ -22,7 +22,6 @@ Run methods on MIA or Detection:
 ```
 $ python 
 ```
-
 
 ## MINT Supports
 We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of-the-art machine text detectors**:
@@ -44,7 +43,7 @@ We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of
 | [Fast-DetectGPT](https://arxiv.org/abs/2310.05130) | Detection | an efficient version of DetectGPT via fast-sampling technique and score normalization
 | [Binoculars](https://arxiv.org/abs/2401.12070) | Detection | the ratio of the target perplexity to the cross entropy of the target sample under some reference model
 | [DetectLLM](https://arxiv.org/abs/2306.05540) | Detection | a variant of DetectGPT instead of using LogRank as the core quantity
-| [Lastde++](https://arxiv.org/abs/2410.06072) | Detection | multi-scale diversity entropy (MDE) measuring the local fluctuations in likelihood across a target text sequence.
+| [Lastde++](https://arxiv.org/abs/2410.06072) | Detection | the multi-scale diversity entropy measuring the local fluctuations in likelihood across a target text sequence
 
 
 <!-- | Category | Methods |
@@ -52,6 +51,9 @@ We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of
 | Baselines | Loss, Rank, LogRank, Entropy |
 | MIAs | [Reference](https://arxiv.org/abs/2012.07805), [Zlib](https://arxiv.org/abs/2012.07805), [Neighborhood](https://arxiv.org/abs/2305.18462), [Min-K%](https://arxiv.org/abs/2310.16789), [Min-K%++](https://arxiv.org/abs/2404.02936), [ReCaLL](https://arxiv.org/abs/2406.15968), [DC-PDD](https://arxiv.org/abs/2409.14781) |
 | Detectors | [DetectGPT](https://arxiv.org/abs/2301.11305), [Fast-DetectGPT](https://arxiv.org/abs/2310.05130), [Binoculars](https://arxiv.org/abs/2401.12070), [DetectLLM](https://arxiv.org/abs/2306.05540), [Lastde++](https://arxiv.org/abs/2410.06072) | -->
+
+## Datasets
+We use the [MIMIR](https://github.com/iamgroot42/mimir) benchmark for MIAs and the [RAID](https://github.com/liamdugan/raid) benchmark for detection. 
 
 
 ## Running on your own dataset
