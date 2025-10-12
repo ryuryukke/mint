@@ -7,9 +7,13 @@
   <a href="https://liamdugan.com/"><img src="https://img.shields.io/badge/NLP-NLP?label=University%20of%20Pennsylvania"/></a>
   <a href="https://arxiv.org/abs/xxxxx.xxxxx"><img src="https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg"/></a>
 </p>
-<p align="center">
+<!-- <p align="center">
 <i><b><span style="font-size:24px;">A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.</span></b></i>
-</p>
+</p> -->
+
+<h3 align="center"><i><b>
+A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.
+</b></i></h3>
 
 ## Quick Start
 Install the Python dependencies:
