@@ -31,8 +31,8 @@ We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of
 |-----------|----------|----------|
 | Loss | Baselines | the likelihood of a target sample
 | Entropy | Baselines | the expected likelihood of a target sample
-| Rank | Baselines | the average rank of the predicted token at each step.
-| LogRank | Baselines | the average log-rank of the predicted token at each step.
+| Rank | Baselines | the average rank of the predicted token at each step
+| LogRank | Baselines | the average log-rank of the predicted token at each step
 | [Reference](https://arxiv.org/abs/2012.07805) | MIA | the difference in the target loss between the model and another reference model
 | [Zlib](https://arxiv.org/abs/2012.07805) | MIA | the ratio of the target loss and the zlib compression score of the target
 | [Neighborhood](https://arxiv.org/abs/2305.18462) | MIA | the difference between the target loss and the average loss over its perturbed samples
