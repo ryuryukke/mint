@@ -8,7 +8,7 @@
   <a href="https://arxiv.org/abs/xxxxx.xxxxx"><img src="https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg"/></a>
 </p>
 <p align="center">
-<i><b><span style="font-size:20px;">A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.</span></b></i>
+<i><b><span style="font-size:24px;">A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.</span></b></i>
 </p>
 
 ## Quick Start
