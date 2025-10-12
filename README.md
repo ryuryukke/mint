@@ -1,7 +1,7 @@
 # MINT
 
 <p align="center">
-<img src="assets/mint_logo.png" alt="MINT" width="200">
+<img src="assets/mint.png" alt="MINT" width="200">
 </p>
 <p align="center">
   <a href="https://github.com/liamdugan/raid/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg"/></a>
@@ -20,24 +20,50 @@
 
 ## Methods
 We include 4 common baseline methods, 7 state-of-the-art MIAs, and 5 state-of-the-art machine text detectors:
-|Method|Task|Description|
-|---|-----|---|
-| [Loss]() | Baseline | The likelihood of a text against the model.|
-| [Rank]() | Baseline | The average rank of the next token in the model's probability distribution at each time step.|
-| [LogRank]() | Baseline | The average log rank of the next token in the model's probability distribution at each time step.|
-| [Entropy]() | Baseline | The expected likelihood of the next token given the preceding tokens at each time step under the model's distribution.|
-| [Reference]() | MIA |the difference in the target sample $x$'s loss between the model $\mathcal{M}$ and another reference model $\mathcal{M}_{ref}$. |
-| [Zlib]() | MIA |
-| [Neighborhood]() | MIA |
-|[Min-K%]()|MIA|
-|[Min-K%++]()|MIA|
-|[ReCaLL]()|MIA|
-|[DC-PDD]()|MIA|
-|[DetectGPT]()|Detection|
-|[Fast-DetectGPT]()|Detection|
-|[Binoculars]()|Detection|
-|[DetectLLM]()|Detection| 
-|[Lastde++]()|Detection| A quantity known as multi-scale diversity entropy (MDE) to measure the local fluctuations in likelihood across a particular text sequence.|
+
+| Category | Methods |
+|-----------|----------|
+| **Baselines** | Loss, Rank, LogRank, Entropy |
+| **MIAs** | [Reference](https://arxiv.org/abs/2012.07805), [Zlib](https://arxiv.org/abs/2012.07805), [Neighborhood](https://arxiv.org/abs/2305.18462), [Min-K%](https://arxiv.org/abs/2310.16789), [Min-K%++](https://arxiv.org/abs/2404.02936), [ReCaLL](https://arxiv.org/abs/2406.15968), [DC-PDD](https://arxiv.org/abs/2409.14781) |
+| **Detectors** | [DetectGPT](https://arxiv.org/abs/2301.11305), [Fast-DetectGPT](https://arxiv.org/abs/2310.05130), [Binoculars](https://arxiv.org/abs/2401.12070), [DetectLLM](https://arxiv.org/abs/2306.05540), [Lastde++](https://arxiv.org/abs/2410.06072) |
+
+<!-- <table align="center">
+  <thead>
+    <tr>
+      <th style="text-align:left;">Category</th>
+      <th style="text-align:center;">Methods</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align:left;"><b>Baselines</b></td>
+      <td style="text-align:center;">Loss, Rank, LogRank, Entropy</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;"><b>MIAs</b></td>
+      <td style="text-align:center;">
+        <a href="https://arxiv.org/abs/2012.07805">Reference</a>, 
+        <a href="https://arxiv.org/abs/2012.07805">Zlib</a>, 
+        <a href="https://arxiv.org/abs/2305.18462">Neighborhood</a>, 
+        <a href="https://arxiv.org/abs/2310.16789">Min-K%</a>, 
+        <a href="https://arxiv.org/abs/2404.02936">Min-K%++</a>, 
+        <a href="https://arxiv.org/abs/2406.15968">ReCaLL</a>, 
+        <a href="https://arxiv.org/abs/2409.14781">DC-PDD</a>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:left;"><b>Detectors</b></td>
+      <td style="text-align:center;">
+        <a href="https://arxiv.org/abs/2301.11305">DetectGPT</a>, 
+        <a href="https://arxiv.org/abs/2310.05130">Fast-DetectGPT</a>, 
+        <a href="https://arxiv.org/abs/2401.12070">Binoculars</a>, 
+        <a href="https://arxiv.org/abs/2306.05540">DetectLLM</a>, 
+        <a href="https://arxiv.org/abs/2410.06072">Lastde++</a>
+      </td>
+    </tr>
+  </tbody>
+</table> -->
+
 
 ## Running on your own dataset
 
