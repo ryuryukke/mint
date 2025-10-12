@@ -14,8 +14,16 @@
 </p>
 
 ## Quick Start
-
-
+Install the Python dependencies:
+```
+$ python -m venv env
+$ source env/bin/activate
+$ pip install -r requirements.txt
+```
+Run methods on MIA or Detection:
+```
+$ python 
+```
 
 
 ## Methods
