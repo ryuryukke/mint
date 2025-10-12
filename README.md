@@ -35,7 +35,7 @@ We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of
 
 
 ## Citation
-If you find our code/data/models or ideas useful in your research, please cite our work:
+If you find our code or ideas useful in your research, please cite our work:
 ```
 @misc{koike2025machinetextdetectors,
       title={Machine Text Detectors are Membership Inference Attacks}, 
