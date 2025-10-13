@@ -61,7 +61,7 @@ We now employ the MIMIR benchmark for MIAs and the RAID benchmark for detection.
 | Benchmark | Models | Domains |
 |:-----------|:--------|:----------|
 | [MIMIR](https://github.com/iamgroot42/mimir) | Pythia-160M, 1.4B, 2.8B, 6.7B, 12B | Wikipedia (knowledge), Pile CC (general web), PubMed Central and ArXiv (academic), HackerNews (dialogue), GitHub and DM Mathematical (technical) |
-| [RAID](https://github.com/liamdugan/raid) | GPT-2-XL, MPT-30B-Chat, LLaMA-2-70B-Chat, ChatGPT and GPT-4 |　Wikipedia and News (knowledge), Abstracts (academic), Recipes (instructions), Reddit (dialogue), Poetry (creative), Books (narrative), Reviews (opinions) |
+| [RAID](https://github.com/liamdugan/raid) | GPT-2-XL, MPT-30B-Chat, LLaMA-2-70B-Chat, ChatGPT and GPT-4 | Wikipedia and News (knowledge), Abstracts (academic), Recipes (instructions), Reddit (dialogue), Poetry (creative), Books (narrative), Reviews (opinions) |
 
 
 
