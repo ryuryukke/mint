@@ -10,11 +10,6 @@
 <h3 align="center"><i><b>
 "A unified evaluation suite for membership inference attacks (MIAs)<br>and machine-generated text detection."
 </b></i></h3>
-<!-- <p align="center">
-<i><b><span style="font-size:24px;">A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.</span></b></i>
-</p> -->
-
-
 
 ## Quick Start
 Build environment:
@@ -32,7 +27,7 @@ $ python
 
 
 ## MINT Supports
-We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of-the-art machine text detectors**:
+We currently cover **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of-the-art machine text detectors**. Please [submit an issue](https://github.com/ryuryukke/mint/issues/new) for more method support.
 
 | Methods | Category | Description
 |-----------|----------|----------|
@@ -61,12 +56,12 @@ We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of
 | Detectors | [DetectGPT](https://arxiv.org/abs/2301.11305), [Fast-DetectGPT](https://arxiv.org/abs/2310.05130), [Binoculars](https://arxiv.org/abs/2401.12070), [DetectLLM](https://arxiv.org/abs/2306.05540), [Lastde++](https://arxiv.org/abs/2410.06072) | -->
 
 ## Datasets
-We use the [MIMIR](https://github.com/iamgroot42/mimir) benchmark for MIAs and the [RAID](https://github.com/liamdugan/raid) benchmark for detection.
+We now employ the MIMIR benchmark for MIAs and the RAID benchmark for detection.
 
 | Benchmark | Models | Domains |
 |:-----------|:--------|:----------|
-| MIMIR | Pythia-160M, 1.4B, 2.8B, 6.7B, 12B | Wikipedia (knowledge), Pile CC (general web), PubMed Central and ArXiv (academic), HackerNews (dialogue), GitHub and DM Mathematical (technical) |
-| RAID | GPT-2-XL, MPT-30B-Chat, LLaMA-2-70B-Chat, ChatGPT and GPT-4 |　Wikipedia and News (knowledge), Abstracts (academic), Recipes (instructions), Reddit (dialogue), Poetry (creative), Books (narrative), Reviews (opinions) |
+| [MIMIR](https://github.com/iamgroot42/mimir) | Pythia-160M, 1.4B, 2.8B, 6.7B, 12B | Wikipedia (knowledge), Pile CC (general web), PubMed Central and ArXiv (academic), HackerNews (dialogue), GitHub and DM Mathematical (technical) |
+| [RAID](https://github.com/liamdugan/raid) | GPT-2-XL, MPT-30B-Chat, LLaMA-2-70B-Chat, ChatGPT and GPT-4 |　Wikipedia and News (knowledge), Abstracts (academic), Recipes (instructions), Reddit (dialogue), Poetry (creative), Books (narrative), Reviews (opinions) |
 
 
 
