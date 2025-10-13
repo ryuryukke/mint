@@ -7,6 +7,7 @@ import pandas as pd
 import torch
 import tqdm
 import transformers
+from src.config import MODEL_MAX_LENGTH
 
 # define regex to match all <extra_id_*> tokens, where * is an integer
 pattern = re.compile(r"<extra_id_\d+>")
@@ -81,10 +82,8 @@ class DetectGPTModel:
         self.base_model = None
         self.fill_dictionary = None
         self.mask_model = None
-        # self.gpt2_tokenizer = None
 
         self.n_perturbation_list = [int(x) for x in self.n_perturbation_list.split(",")]
-        # self.gpt2_tokenizer = transformers.GPT2Tokenizer.from_pretrained("gpt2", cache_dir=self.cache_dir)
 
         self.base_model = transformers.AutoModelForCausalLM.from_pretrained(
             self.base_model_name, cache_dir=self.cache_dir, device_map="auto"
@@ -93,19 +92,12 @@ class DetectGPTModel:
             self.base_model_name, cache_dir=self.cache_dir
         )
         self.base_tokenizer.pad_token_id = self.base_tokenizer.eos_token_id
-        if self.base_model_name == "facebook/opt-125m":
-            self.base_tokenizer.model_max_length = 2048
-        elif "Llama-3" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 4096
-        elif "Llama-2" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
-        elif "mpt" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
-        elif "pythia" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 2048
+        for key, max_len in MODEL_MAX_LENGTH.items():
+            if key in self.base_model_name:
+                self.base_tokenizer.model_max_length = max_len
+                break
 
         # mask filling t5 model
-        # first_device = next(self.base_model.parameters()).device
         self.mask_model = transformers.AutoModelForSeq2SeqLM.from_pretrained(
             self.mask_filling_model_name, cache_dir=self.cache_dir, device_map="auto"
         )
@@ -155,7 +147,9 @@ class DetectGPTModel:
         first_device = next(self.mask_model.parameters()).device
         n_expected = self.count_masks(texts)
         stop_id = self.mask_tokenizer.encode(f"<extra_id_{max(n_expected)}>")[0]
-        tokens = self.mask_tokenizer(texts, return_tensors="pt", truncation=True, padding=True).to(first_device)
+        tokens = self.mask_tokenizer(
+            texts, return_tensors="pt", truncation=True, padding=True
+        ).to(first_device)
         outputs = self.mask_model.generate(
             **tokens,
             max_length=150,

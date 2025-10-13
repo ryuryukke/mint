@@ -2,31 +2,28 @@
 Adapted from the original implementation of Lastde: https://github.com/TrustMedia-zju/Lastde_Detector
 Some modifications added.
 """
-import functools
-import os
-import re
 
+import os
 import numpy as np
-import pandas as pd
 import torch
 import tqdm
 import transformers
-import sys
-sys.path.append('/home1/r/rkoike/ryutok/ryutok/mia-llm-detection/raid/detectors/models/lastde_doubleplus')
-import fastMDE
+from models.lastde_doubleplus import fastMDE
 import random
+from src.config import MODEL_MAX_LENGTH
 
 
 class LastdeDoublePlusModel:
     def __init__(
-        self, 
+        self,
         n_samples=100,
-        base_model_name='EleutherAI/gpt-j-6b',
+        base_model_name="",
         embed_size=4,
         epsilon=8,
         tau_prime=15,
         seed=0,
-        cache_dir=os.environ["HF_HOME"]):
+        cache_dir=os.environ["HF_HOME"],
+    ):
         self.n_samples = n_samples
         self.base_model_name = base_model_name
         self.embed_size = embed_size
@@ -46,17 +43,10 @@ class LastdeDoublePlusModel:
             self.base_model_name, cache_dir=self.cache_dir
         )
         self.base_tokenizer.pad_token_id = self.base_tokenizer.eos_token_id
-        if self.base_model_name == "facebook/opt-125m":
-            self.base_tokenizer.model_max_length = 2048
-        elif "Llama-3" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 4096
-        elif "Llama-2" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
-        elif "mpt" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
-        elif "pythia" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 2048
-    
+        for key, max_len in MODEL_MAX_LENGTH.items():
+            if key in self.base_model_name:
+                self.base_tokenizer.model_max_length = max_len
+                break
 
     def get_samples(self, logits, labels):
         assert logits.shape[0] == 1
@@ -81,7 +71,12 @@ class LastdeDoublePlusModel:
         tau_prime = self.tau_prime
 
         templl = log_likelihood.mean(dim=1)
-        aggmde = fastMDE.get_tau_multiscale_DE(ori_data=log_likelihood, embed_size=embed_size, epsilon=epsilon, tau_prime=tau_prime)
+        aggmde = fastMDE.get_tau_multiscale_DE(
+            ori_data=log_likelihood,
+            embed_size=embed_size,
+            epsilon=epsilon,
+            tau_prime=tau_prime,
+        )
         lastde = templl / aggmde if aggmde is not None else None
         return lastde
 
@@ -113,13 +108,18 @@ class LastdeDoublePlusModel:
 
         return discrepancy.cpu().item()
 
-
-    def detect(self, text):
+    def detect(self, text: str) -> float:
         if len(text) == 0:
             return 0.0
         first_device = next(self.base_model.parameters()).device
-        tokenized = self.base_tokenizer(text, return_tensors="pt", padding=True, truncation=True, return_token_type_ids=False).to(first_device)
-        
+        tokenized = self.base_tokenizer(
+            text,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+            return_token_type_ids=False,
+        ).to(first_device)
+
         if tokenized.input_ids.shape[1] <= 1:
             return 0.0
 
@@ -128,14 +128,18 @@ class LastdeDoublePlusModel:
             logits_score = self.base_model(**tokenized).logits[:, :-1]
             logits_ref = logits_score
 
-            original_crit = self.get_sampling_discrepancy(logits_ref, logits_score, labels)
+            original_crit = self.get_sampling_discrepancy(
+                logits_ref, logits_score, labels
+            )
         return original_crit
-    
+
 
 class LastdeDoublePlus:
     def __init__(self, base_model_name: str):
         self.base_model_name = base_model_name
-        self.lastde_doubleplus_instance = LastdeDoublePlusModel(base_model_name=self.base_model_name)
+        self.lastde_doubleplus_instance = LastdeDoublePlusModel(
+            base_model_name=self.base_model_name
+        )
 
     def inference(self, texts: list) -> list:
         predictions = []
@@ -144,12 +148,3 @@ class LastdeDoublePlus:
             predictions.append(pred_score)
 
         return predictions
-
-
-
-
-
-            # For valid sliding window, we need to ensure that the input length is at least embed_size
-            # log_likelihood = self.get_likelihood(logits_score, labels)
-            # if log_likelihood.shape[1] < self.embed_size:
-            #     return 0.0

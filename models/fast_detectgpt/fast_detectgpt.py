@@ -1,12 +1,10 @@
 import os
-
 from tqdm import tqdm
-
 from .fastdetectgpt.local_infer import FastDetectGPTModel
 
 
 class FastDetectGPT:
-    def __init__(self, use_log_rank, base_model_name, ref_model_name):
+    def __init__(self, use_log_rank: bool, base_model_name: str, ref_model_name: str):
         self.base_model_name = base_model_name
         self.ref_model_name = ref_model_name
         self.use_log_rank = use_log_rank
@@ -16,7 +14,7 @@ class FastDetectGPT:
             scoring_model_name=self.base_model_name,
             reference_model_name=self.ref_model_name,
             cache_dir=os.environ["HF_HOME"],
-            dataset="xsum",
+            dataset="",
             ref_path=ref_path,
             use_log_rank=use_log_rank,
         )
@@ -31,6 +29,3 @@ class FastDetectGPT:
             )
             predictions.append(prob)
         return predictions
-
-    def interactive(self):
-        self.fast_detect_gpt_instance.run_interactive()

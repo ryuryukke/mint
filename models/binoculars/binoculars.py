@@ -1,6 +1,4 @@
 import os
-
-import numpy as np
 import torch
 import transformers
 from tqdm import tqdm
@@ -11,10 +9,6 @@ from .utils.utils import assert_tokenizer_consistency
 
 torch.set_grad_enabled(False)
 
-GLOBAL_BINOCULARS_THRESHOLD = 0.9015310749276843  # selected using Falcon-7B and Falcon-7B-Instruct at bfloat16
-# DEVICE_1 = "cuda:0" if torch.cuda.is_available() else "cpu"
-# DEVICE_2 = "cuda:1" if torch.cuda.device_count() > 1 else DEVICE_1
-
 
 class Binoculars(object):
     def __init__(
@@ -24,23 +18,21 @@ class Binoculars(object):
         use_bfloat16: bool = True,
         max_token_observed: int = 512,
     ) -> None:
-        if 'mpt' not in observer_name_or_path:
+        if "mpt" not in observer_name_or_path:
             assert_tokenizer_consistency(observer_name_or_path, performer_name_or_path)
 
         self.observer_model = AutoModelForCausalLM.from_pretrained(
             observer_name_or_path,
-            # device_map={"": DEVICE_1},
-            device_map='auto',
+            device_map="auto",
             trust_remote_code=True,
-            cache_dir=os.environ['HF_HOME'],
+            cache_dir=os.environ["HF_HOME"],
             torch_dtype=torch.bfloat16 if use_bfloat16 else torch.float32,
         )
         self.performer_model = AutoModelForCausalLM.from_pretrained(
             performer_name_or_path,
-            # device_map={"": DEVICE_2},
-            device_map='auto',
+            device_map="auto",
             trust_remote_code=True,
-            cache_dir=os.environ['HF_HOME'],
+            cache_dir=os.environ["HF_HOME"],
             torch_dtype=torch.bfloat16 if use_bfloat16 else torch.float32,
         )
 
@@ -76,7 +68,7 @@ class Binoculars(object):
             torch.cuda.synchronize()
         return observer_logits, performer_logits
 
-    def compute_score(self, input_text):
+    def compute_score(self, input_text: str) -> float:
         batch = [input_text] if isinstance(input_text, str) else input_text
         first_device = next(self.observer_model.parameters()).device
         encodings = self._tokenize(batch)
@@ -90,14 +82,11 @@ class Binoculars(object):
         )
         binoculars_scores = ppl / x_ppl
         binoculars_scores = binoculars_scores.tolist()
-        return binoculars_scores[0] if isinstance(input_text, str) else binoculars_scores
+        return (
+            binoculars_scores[0] if isinstance(input_text, str) else binoculars_scores
+        )
 
-    def predict(self, input_text):
-        binoculars_scores = np.array(self.compute_score(input_text))
-        pred = np.where(binoculars_scores < GLOBAL_BINOCULARS_THRESHOLD, "AI-Generated", "Human-Generated").tolist()
-        return pred
-
-    def inference(self, texts):
+    def inference(self, texts: list) -> list:
         predictions = []
         for text in tqdm(texts):
             predictions.append(1 - self.compute_score(text))

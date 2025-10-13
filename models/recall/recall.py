@@ -1,19 +1,17 @@
-'''
+"""
 Adapted from the code of the paper "RECALL: Membership Inference via Relative Conditional Log-Likelihoods": https://arxiv.org/pdf/2406.15968
-'''
-import functools
-import os
-import re
+"""
 
+import os
 import numpy as np
-import pandas as pd
 import torch
 import tqdm
 import transformers
+from src.config import MODEL_MAX_LENGTH
 
 
 class RecallModel:
-    def __init__(self, base_model_name, cache_dir):
+    def __init__(self, base_model_name: str, cache_dir: str):
         self.base_model_name = base_model_name
         self.cache_dir = cache_dir
         self.base_model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -23,47 +21,51 @@ class RecallModel:
             self.base_model_name, cache_dir=self.cache_dir
         )
         self.base_tokenizer.pad_token_id = self.base_tokenizer.eos_token_id
-        if self.base_model_name == "facebook/opt-125m":
-            self.base_tokenizer.model_max_length = 2048
-        elif "Llama-3" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 4096
-        elif "Llama-2" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
-        elif "mpt" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
-        elif "pythia" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 2048
-        
-        # if 'gpt2' in self.base_model_name:
-        #     self.base_model.config.pad_token_id = self.base_tokenizer.pad_token_id
-    
+        for key, max_len in MODEL_MAX_LENGTH.items():
+            if key in base_model_name:
+                self.base_tokenizer.model_max_length = max_len
+                break
 
     def get_conditional_ll(self, text: str, prefix: list) -> float:
         first_device = next(self.base_model.parameters()).device
-        input_encodings = self.base_tokenizer("".join(prefix), truncation=True, return_tensors="pt").to(first_device)
-        target_encodings = self.base_tokenizer(text, truncation=True, return_tensors="pt").to(first_device)
-        concat_ids = torch.cat((input_encodings.input_ids, target_encodings.input_ids), dim=1)
+        input_encodings = self.base_tokenizer(
+            "".join(prefix), truncation=True, return_tensors="pt"
+        ).to(first_device)
+        target_encodings = self.base_tokenizer(
+            text, truncation=True, return_tensors="pt"
+        ).to(first_device)
+        concat_ids = torch.cat(
+            (input_encodings.input_ids, target_encodings.input_ids), dim=1
+        )
         # to avoid out-of-index error
-        max_length = self.base_model.config.max_position_embeddings if not 'mpt' in self.base_model_name else self.base_model.config.max_seq_len
+        max_length = (
+            self.base_model.config.max_position_embeddings
+            if "mpt" not in self.base_model_name
+            else self.base_model.config.max_seq_len
+        )
         if concat_ids.shape[1] > max_length:
             excess = concat_ids.shape[1] - max_length
             concat_ids = concat_ids[:, excess:]
             labels = concat_ids.clone()
-            labels[:, :input_encodings.input_ids.size(1) - excess] = -100
+            labels[:, : input_encodings.input_ids.size(1) - excess] = -100
         else:
             labels = concat_ids.clone()
-            labels[:, :input_encodings.input_ids.size(1)] = -100
-        # labels = concat_ids.clone()
-        # labels[:, : input_encodings.input_ids.size(1)] = -100
+            labels[:, : input_encodings.input_ids.size(1)] = -100
+
         with torch.no_grad():
             outputs = self.base_model(concat_ids, labels=labels)
-        loss, logits = outputs[:2]
+        loss, _ = outputs[:2]
         return -loss.item()
 
-
-    def process_prefix(self, prefix: list, avg_length: int, total_shots: int) -> list:
-        max_length = self.base_model.config.max_position_embeddings if not 'mpt' in self.base_model_name else self.base_model.config.max_seq_len
-        token_counts = [len(self.base_tokenizer.encode(shot, truncation=True)) for shot in prefix]
+    def process_prefix(self, prefix: list, avg_length: int) -> list:
+        max_length = (
+            self.base_model.config.max_position_embeddings
+            if "mpt" not in self.base_model_name
+            else self.base_model.config.max_seq_len
+        )
+        token_counts = [
+            len(self.base_tokenizer.encode(shot, truncation=True)) for shot in prefix
+        ]
         target_token_count = avg_length
         total_tokens = sum(token_counts) + target_token_count
         if total_tokens <= max_length:
@@ -79,16 +81,16 @@ class RecallModel:
                 break
         # Truncate the prefix to include only the maximum number of shots
         truncated_prefix = prefix[-max_shots:]
-        total_shots = max_shots
         return truncated_prefix
-
 
     def detect(self, text: str, negative_prefix: list) -> float:
         if len(text) == 0:
             return 0.0
         with torch.no_grad():
             first_device = next(self.base_model.parameters()).device
-            tokenized = self.base_tokenizer(text, truncation=True, return_tensors="pt").to(first_device)
+            tokenized = self.base_tokenizer(
+                text, truncation=True, return_tensors="pt"
+            ).to(first_device)
 
             # get unconditional log likelihood
             labels = tokenized.input_ids
@@ -98,8 +100,8 @@ class RecallModel:
             ll_negative = self.get_conditional_ll(text, negative_prefix)
 
             return ll_negative / ll
-    
-            
+
+
 class Recall:
     def __init__(self, base_model_name: str, prefix: dict):
         self.base_model_name = base_model_name
@@ -110,9 +112,22 @@ class Recall:
 
     def inference(self, texts: list) -> list:
         predictions = []
-        # negative samples means non-member samples in MIA and human-written samples in LLM detection
-        avg_length = int(np.mean([len(self.recall_instance.base_tokenizer.encode(text, truncation=True)) for text in texts])) 
-        negative_prefix = self.recall_instance.process_prefix(self.prefix['negative_sample'], avg_length, 10)
+        # negative samples means non-member samples in MIAs and human-written samples in detection
+        avg_length = int(
+            np.mean(
+                [
+                    len(
+                        self.recall_instance.base_tokenizer.encode(
+                            text, truncation=True
+                        )
+                    )
+                    for text in texts
+                ]
+            )
+        )
+        negative_prefix = self.recall_instance.process_prefix(
+            self.prefix["negative_sample"], avg_length
+        )
         for text in tqdm.tqdm(texts):
             pred_score = self.recall_instance.detect(text, negative_prefix)
             predictions.append(pred_score)

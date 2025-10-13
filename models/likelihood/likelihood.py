@@ -1,16 +1,12 @@
-import functools
 import os
-import re
-
-import numpy as np
-import pandas as pd
 import torch
 import tqdm
 import transformers
+from src.config import MODEL_MAX_LENGTH
 
 
 class LikelihoodModel:
-    def __init__(self, base_model_name, cache_dir):
+    def __init__(self, base_model_name: str, cache_dir: str):
         self.base_model_name = base_model_name
         self.cache_dir = cache_dir
         self.base_model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -20,17 +16,12 @@ class LikelihoodModel:
             self.base_model_name, cache_dir=self.cache_dir
         )
         self.base_tokenizer.pad_token_id = self.base_tokenizer.eos_token_id
-        if self.base_model_name == "facebook/opt-125m":
-            self.base_tokenizer.model_max_length = 2048
-        elif "Llama-3" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 4096
-        elif "Llama-2" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
-        elif "mpt" in self.base_model_name:
-            self.base_tokenizer.model_max_length = 512
+        for key, max_len in MODEL_MAX_LENGTH.items():
+            if key in self.base_model_name:
+                self.base_tokenizer.model_max_length = max_len
+                break
 
-    # Get the log likelihood of each text under the base_model
-    def detect(self, text):
+    def detect(self, text: str) -> float:
         if len(text) == 0:
             return 0.0
         with torch.no_grad():
