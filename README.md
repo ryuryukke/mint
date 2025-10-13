@@ -8,7 +8,7 @@
   <a href="https://arxiv.org/abs/xxxxx.xxxxx"><img src="https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg"/></a>
 </p>
 <h3 align="center"><i><b>
-A unified evaluation suite for membership inference attacks (MIAs)<br>and machine-generated text detection.
+"A unified evaluation suite for membership inference attacks (MIAs)<br>and machine-generated text detection."
 </b></i></h3>
 <!-- <p align="center">
 <i><b><span style="font-size:24px;">A unified evaluation suite for membership inference attacks (MIAs) and machine-generated text detection.</span></b></i>
@@ -17,16 +17,19 @@ A unified evaluation suite for membership inference attacks (MIAs)<br>and machin
 
 
 ## Quick Start
-Install the Python dependencies:
+Build environment:
 ```
+$ git clone https://github.com/ryuryukke/mint.git
+$ cd mint
 $ python -m venv env
 $ source env/bin/activate
 $ pip install -r requirements.txt
 ```
-Run methods on MIA or Detection:
+Run evaluation on MIA or Detection:
 ```
 $ python 
 ```
+
 
 ## MINT Supports
 We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of-the-art machine text detectors**:
@@ -58,12 +61,20 @@ We include **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of
 | Detectors | [DetectGPT](https://arxiv.org/abs/2301.11305), [Fast-DetectGPT](https://arxiv.org/abs/2310.05130), [Binoculars](https://arxiv.org/abs/2401.12070), [DetectLLM](https://arxiv.org/abs/2306.05540), [Lastde++](https://arxiv.org/abs/2410.06072) | -->
 
 ## Datasets
-We use the [MIMIR](https://github.com/iamgroot42/mimir) benchmark for MIAs and the [RAID](https://github.com/liamdugan/raid) benchmark for detection. 
+We use the [MIMIR](https://github.com/iamgroot42/mimir) benchmark for MIAs and the [RAID](https://github.com/liamdugan/raid) benchmark for detection.
+
+| Benchmark | Models | Domains |
+|:-----------|:--------|:----------|
+| MIMIR | Pythia-160M, 1.4B, 2.8B, 6.7B, 12B | Wikipedia (knowledge), Pile CC (general web), PubMed Central and ArXiv (academic), HackerNews (dialogue), GitHub and DM Mathematical (technical) |
+| RAID | GPT-2-XL, MPT-30B-Chat, LLaMA-2-70B-Chat, ChatGPT and GPT-4 |　Wikipedia and News (knowledge), Abstracts (academic), Recipes (instructions), Reddit (dialogue), Poetry (creative), Books (narrative), Reviews (opinions) |
+
 
 
 ## Running on your own dataset
+You can add your own dataset by ...
 
 ## Running your own attack or detector
+You can add your own attack / detector by ...
 
 
 ## Citation
@@ -71,7 +82,7 @@ If you find our code or ideas useful in your research, please cite our work:
 ```
 @misc{koike2025machinetextdetectors,
       title={Machine Text Detectors are Membership Inference Attacks}, 
-      author={Ryuto Koike and Liam Dugan and Masahiro Kaneko and Chris Callison-Burch, Naoaki Okazaki},
+      author={Ryuto Koike and Liam Dugan and Masahiro Kaneko and Chris Callison-Burch and Naoaki Okazaki},
       year={2025},
       eprint={xxxx.xxxxx},
       archivePrefix={arXiv},
