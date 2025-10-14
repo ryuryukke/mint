@@ -8,7 +8,7 @@
   <a href="https://arxiv.org/abs/xxxxx.xxxxx"><img src="https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg"/></a>
 </p>
 <h3 align="center"><i><b>
-"A unified evaluation suite for membership inference attacks (MIAs)<br>and machine-generated text detection."
+"A unified evaluation suite for membership inference attacks<br>and machine-generated text detection."
 </b></i></h3>
 
 ## Quick Start
@@ -56,7 +56,7 @@ We currently cover **4 common baselines**, **7 state-of-the-art MIAs**, and **5 
 | Detectors | [DetectGPT](https://arxiv.org/abs/2301.11305), [Fast-DetectGPT](https://arxiv.org/abs/2310.05130), [Binoculars](https://arxiv.org/abs/2401.12070), [DetectLLM](https://arxiv.org/abs/2306.05540), [Lastde++](https://arxiv.org/abs/2410.06072) | -->
 
 ## Datasets
-We now employ the MIMIR benchmark for MIAs and the RAID benchmark for detection.
+We employ the MIMIR benchmark for MIAs and the RAID benchmark for detection.
 
 | Benchmark | Models | Domains |
 |:-----------|:--------|:----------|
