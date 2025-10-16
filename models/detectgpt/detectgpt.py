@@ -367,4 +367,4 @@ class DetectGPT:
             out = initial[0].get("predictions")
             predictions.append(out.get("real")[0])
 
-        return predictions
+        return {"detectgpt": predictions}

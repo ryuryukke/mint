@@ -55,4 +55,4 @@ class Rank:
             pred_score = -self.rank_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"rank": predictions}

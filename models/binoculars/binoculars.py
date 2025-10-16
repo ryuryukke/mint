@@ -90,4 +90,4 @@ class Binoculars(object):
         predictions = []
         for text in tqdm(texts):
             predictions.append(1 - self.compute_score(text))
-        return predictions
+        return {"binoculars": predictions}

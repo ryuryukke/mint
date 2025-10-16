@@ -48,4 +48,4 @@ class Entropy:
             pred_score = -self.entropy_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"entropy": predictions}

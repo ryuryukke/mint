@@ -132,4 +132,4 @@ class Recall:
             pred_score = self.recall_instance.detect(text, negative_prefix)
             predictions.append(pred_score)
 
-        return predictions
+        return {"recall": predictions}

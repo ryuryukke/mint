@@ -50,4 +50,4 @@ class Zlib:
             pred_score = self.zlib_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"zlib": predictions}

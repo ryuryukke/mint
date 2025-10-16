@@ -46,4 +46,4 @@ class Loss:
             pred_score = self.loss_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"loss": predictions}

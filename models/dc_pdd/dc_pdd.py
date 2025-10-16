@@ -98,4 +98,4 @@ class DCPDD:
             pred_score = self.dc_pdd_instance.detect(text, freq_dist)
             predictions.append(pred_score)
 
-        return predictions
+        return {"dc_pdd": predictions}

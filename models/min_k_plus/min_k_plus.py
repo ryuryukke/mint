@@ -62,4 +62,4 @@ class MinKPlus:
             pred_score = self.min_k_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"min_k_plus": predictions}

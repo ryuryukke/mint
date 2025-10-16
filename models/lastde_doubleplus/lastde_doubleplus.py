@@ -147,4 +147,4 @@ class LastdeDoublePlus:
             pred_score = self.lastde_doubleplus_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"lastde_doubleplus": predictions}

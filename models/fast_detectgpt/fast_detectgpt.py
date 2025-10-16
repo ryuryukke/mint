@@ -28,4 +28,4 @@ class FastDetectGPT:
                 else self.fast_detect_gpt_instance.run(text)
             )
             predictions.append(prob)
-        return predictions
+        return {"fastdetectgpt": predictions}

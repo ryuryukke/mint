@@ -69,4 +69,4 @@ class Reference:
             pred_score = self.ref_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"ref": predictions}

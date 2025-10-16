@@ -46,4 +46,4 @@ class Likelihood:
             pred_score = self.likelihood_instance.detect(text)
             predictions.append(pred_score)
 
-        return predictions
+        return {"likelihood": predictions}
