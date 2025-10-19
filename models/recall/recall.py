@@ -126,7 +126,7 @@ class Recall:
             )
         )
         negative_prefix = self.recall_instance.process_prefix(
-            self.prefix["negative_sample"], avg_length
+            self.prefix["negatives"], avg_length
         )
         for text in tqdm.tqdm(texts):
             pred_score = self.recall_instance.detect(text, negative_prefix)
