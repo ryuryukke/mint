@@ -30,6 +30,7 @@ def load_evaluation_data(
     task: str, domain: str, model_name: str, decon_setting: str
 ) -> tuple:
     if task == "mia":
+        print("Loading MIA dataset...")
         dataset = load_dataset(
             "iamgroot42/mimir",
             domain,
@@ -39,6 +40,7 @@ def load_evaluation_data(
         negatives, positives = dataset["nonmember"], dataset["member"]
         print(f"Size of nonmembers: {len(negatives)}, members: {len(positives)}")
     elif task == "detection":
+        print("Loading detection dataset...")
         raid_path = DATA_DIR / "RAID" / "raid_train.pkl"
         if raid_path.exists():
             train_df = pd.read_pickle(raid_path)
@@ -206,7 +208,7 @@ if __name__ == "__main__":
         )
 
     print(
-        f"Evaluate methods for {args.task} task, {args.domain} domain, {args.model_name} model"
+        f"Evaluate methods for [{args.task}] task, [{args.domain}] domain, [{args.model_name}] model"
     )
 
     task, domain, methods, model_name, decon_setting = (
