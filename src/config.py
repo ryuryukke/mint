@@ -84,7 +84,7 @@ MODEL_NAME_MAP = {
 }
 
 # mapping from model name to smaller model path in Hugging Face for reference models
-SMALLER_MOEL_NAME_MAP = {
+SMALLER_MODEL_NAME_MAP = {
     "gpt2": "openai-community/gpt2",
     "mpt-chat": "mosaicml/mpt-7b-chat",
     "llama-chat": "meta-llama/Llama-2-7b-chat-hf",
