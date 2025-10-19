@@ -1,13 +1,14 @@
 import argparse
-from tqdm import tqdm
-from method import get_method
-from sklearn.metrics import roc_curve, auc
-from sklearn.metrics import accuracy_score
-from datasets import load_dataset
-import os
 import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
+from datasets import load_dataset
+from sklearn.metrics import roc_curve, auc
+
+from method import get_method
 from raid.utils import load_data
 from src.config import (
     TASK2DOMAINS,
@@ -17,8 +18,12 @@ from src.config import (
     BASELINE_METHODS,
     MULTI_BASIC_MIA_METHODS,
     MODEL_NAME_MAP,
-    SMALLER_MOEL_NAME_MAP,
+    SMALLER_MODEL_NAME_MAP,
 )
+
+ROOT = Path(__file__).parent.parent
+DATA_DIR = ROOT / "data"
+RESULTS_DIR = ROOT / "results"
 
 
 def load_evaluation_data(
@@ -34,73 +39,70 @@ def load_evaluation_data(
         negatives, positives = dataset["nonmember"], dataset["member"]
         print(f"Size of nonmembers: {len(negatives)}, members: {len(positives)}")
     elif task == "detection":
-        raid_path = "/data/RAID/raid_train.pkl"
-        if os.path.exists(raid_path):
+        raid_path = DATA_DIR / "RAID" / "raid_train.pkl"
+        if raid_path.exists():
             train_df = pd.read_pickle(raid_path)
         else:
             train_df = load_data(split="train")
-            with open(raid_path, "wb") as f:
-                pd.to_pickle(train_df, f)
-        negatives = train_df[
+            pd.to_pickle(train_df, raid_path)
+
+        humans = train_df[
             (train_df["domain"] == domain)
             & (train_df["model"] == "human")
             & (train_df["attack"] == "none")
         ]
-        positives = train_df[
+        machines = train_df[
             (train_df["domain"] == domain)
             & (train_df["model"] == model_name)
             & (train_df["repetition_penalty"] == "no")
             & (train_df["attack"] == "none")
             & (train_df["decoding"] == "sampling")
         ]
+        negatives, positives = (
+            humans["generation"].tolist(),
+            machines["generation"].tolist(),
+        )
         print(f"Size of humans: {len(negatives)}, machines: {len(positives)}")
+    else:
+        raise ValueError(f"Unknown task: {task}")
     return negatives, positives
 
 
 def get_method_names(methods: str) -> list:
-    if methods == "all":
-        return ALL_METHODS
-    elif methods == "all_mia":
-        return ALL_MIA_METHODS
-    elif methods == "all_detection":
-        return ALL_DETECTION_METHODS
-    else:
-        return methods.split(" ")
+    return {
+        "all": ALL_METHODS,
+        "all_mia": ALL_MIA_METHODS,
+        "all_detection": ALL_DETECTION_METHODS,
+    }.get(methods, methods.split())
 
 
-def load_cache_path(task, domain, model_name, decon_setting):
-    pred_dir = f"../results/{task}/predictions"
-    score_dir = f"../results/{task}/scores"
+def load_cache_path(task, domain, model_name, decon_setting) -> tuple[Path, Path]:
+    base = RESULTS_DIR / task
+    pred_dir = base / "predictions"
+    score_dir = base / "scores"
+    pred_dir.mkdir(parents=True, exist_ok=True)
+    score_dir.mkdir(parents=True, exist_ok=True)
 
-    os.makedirs(pred_dir, exist_ok=True)
-    os.makedirs(score_dir, exist_ok=True)
-
-    common_name = f"{domain}_{model_name.replace('/', '_')}"
+    common = f"{domain}_{model_name.replace('/', '_')}"
     if task == "mia":
-        common_name += f"_{decon_setting}"
-
-    pred_path = f"{pred_dir}/{common_name}.json"
-    score_path = f"{score_dir}/{common_name}.json"
-
-    return pred_path, score_path
+        common += f"_{decon_setting}"
+    return pred_dir / f"{common}.json", score_dir / f"{common}.json"
 
 
-def load_cached_results(path: str) -> dict:
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            results = json.load(f)
-    else:
-        results = dict()
-    return results
+def load_cached_results(path: Path) -> dict:
+    return json.loads(path.read_text()) if path.exists() else {}
 
 
-def load_prefix(task: str, domain: str) -> dict:
-    with open(
-        f"../data/Pile/{'Prefix' if task == 'mia' else 'RAID'}/{domain}_prefix.json",
-        "r",
-    ) as f:
-        prefix = json.load(f)
-    return prefix
+def load_prefix(task: str, domain: str, generator: str) -> dict:
+    prefix_root = DATA_DIR / ("Pile" if task == "mia" else "RAID") / "Prefix"
+    name = f"{domain}{'_prefix' if task == 'mia' else f'_{generator}_prefix'}.json"
+    path = prefix_root / name
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Prefix file not found: {path}\n"
+            f"Please prepare it by executing {(DATA_DIR / ('Pile' if task == 'mia' else 'RAID') / 'collect_prefix.sh')}"
+        )
+    return json.loads(path.read_text())
 
 
 def get_roc_auc(real_preds: list, sample_preds: list) -> float:
@@ -110,7 +112,6 @@ def get_roc_auc(real_preds: list, sample_preds: list) -> float:
     mask = ~np.isnan(y_scores)
     y_true, y_scores = y_true[mask], y_scores[mask]
 
-    # ROC-AUC算出
     fpr, tpr, _ = roc_curve(y_true, y_scores)
     return float(auc(fpr, tpr))
 
@@ -122,12 +123,10 @@ def update_results(
     predictions_for_negatives: dict,
     predictions_for_positives: dict,
 ) -> tuple:
-    if method_name == "baselines":
-        methods = BASELINE_METHODS
-    elif method_name == "multi_basic_mia":
-        methods = MULTI_BASIC_MIA_METHODS
-    else:
-        methods = [method_name]
+    methods = {
+        "baselines": BASELINE_METHODS,
+        "multi_basic_mia": MULTI_BASIC_MIA_METHODS,
+    }.get(method_name, [method_name])
 
     for method in methods:
         predictions_for_negatives_ = predictions_for_negatives[method]
@@ -136,16 +135,16 @@ def update_results(
             "negatives": predictions_for_negatives_,
             "positives": predictions_for_positives_,
         }
-        roc_auc, _ = get_roc_auc(predictions_for_negatives_, predictions_for_positives_)
+        roc_auc = get_roc_auc(predictions_for_negatives_, predictions_for_positives_)
         scores[method] = {"roc_auc": roc_auc}
 
     return all_predictions, scores
 
 
-def save_results(results: dict, save_path: str) -> None:
-    with open(save_path, "w") as f:
-        json.dump(results, f, ensure_ascii=False, indent=2)
-    return
+def save_results(results: dict, save_path: Path) -> None:
+    tmp = save_path.with_suffix(save_path.suffix + ".tmp")
+    tmp.write_text(json.dumps(results, ensure_ascii=False, indent=2))
+    tmp.replace(save_path)
 
 
 if __name__ == "__main__":
@@ -178,7 +177,7 @@ if __name__ == "__main__":
             "multi_basic_mia",  # "loss", "entropy", "rank", "logrank", "ref", "zlib", "min_k", "min_k_plus"
             "baselines",  # "loss", "entropy", "rank", "logrank"
         ],
-        help="You can also specify a space-separated list of methods.",
+        help="Specify one or more methods (space-separated).",
     )
     parser.add_argument(
         "--model_name",
@@ -196,13 +195,15 @@ if __name__ == "__main__":
             "pythia-12b",
         ],
     )
-    parser.add_argument("--decon_setting", type=str, default="13_02")
+    parser.add_argument("--decon_setting", type=str, default="ngram_13_0.2")
 
     args = parser.parse_args()
 
-    assert args.domain in TASK2DOMAINS[args.task], (
-        f"{args.domain} not in {TASK2DOMAINS[args.task]}, please specify the correct domain for {args.task} task."
-    )
+    if args.domain not in TASK2DOMAINS[args.task]:
+        raise ValueError(
+            f"Invalid domain '{args.domain}' for task '{args.task}'. "
+            f"Expected one of: {', '.join(TASK2DOMAINS[args.task])}"
+        )
 
     print(
         f"Evaluate methods for {args.task} task, {args.domain} domain, {args.model_name} model"
@@ -225,14 +226,17 @@ if __name__ == "__main__":
     )
 
     prefix = None
-    model_name, ref_model_name = (
-        MODEL_NAME_MAP.get(model_name, model_name),
-        SMALLER_MOEL_NAME_MAP.get(model_name, model_name),
+    if model_name not in MODEL_NAME_MAP:
+        raise ValueError(f"Model {model_name} not supported.")
+
+    real_model_name, real_ref_model_name = (
+        MODEL_NAME_MAP[model_name],
+        SMALLER_MODEL_NAME_MAP[model_name],
     )
     for method_name in tqdm(method_names):
         if method_name == "recall":
-            prefix = load_prefix(domain)
-        method = get_method(method_name, model_name, ref_model_name, prefix)
+            prefix = load_prefix(task, domain, model_name)
+        method = get_method(method_name, real_model_name, real_ref_model_name, prefix)
 
         predictions_for_negatives, predictions_for_positives = (
             method.inference(negatives),
@@ -247,6 +251,5 @@ if __name__ == "__main__":
             predictions_for_positives,
         )
 
-        # save prediction scores per methods
         save_results(predictions, pred_path)
         save_results(scores, score_path)
