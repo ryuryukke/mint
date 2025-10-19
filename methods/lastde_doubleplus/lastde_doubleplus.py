@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import tqdm
 import transformers
-from models.lastde_doubleplus import fastMDE
+from methods.lastde_doubleplus import fastMDE
 import random
 from src.config import MODEL_MAX_LENGTH
 
