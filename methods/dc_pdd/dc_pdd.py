@@ -10,6 +10,9 @@ from tqdm import tqdm
 import transformers
 import pickle
 from src.config import MODEL_MAX_LENGTH
+from pathlib import Path
+
+ROOT = Path(__file__).parent.parent.parent
 
 
 class DCPDDModel:
@@ -82,10 +85,10 @@ class DCPDD:
     def load_freq_dist(self):
         for model_type in ["pythia", "gpt2", "mpt", "mistral", "Llama-2", "Llama-3"]:
             if model_type in self.base_model_name:
-                dist_path = f"../data/C4/freq_dist_{model_type}.pkl"
-                if not os.path.exists(dist_path):
+                dist_path = ROOT / f"data/C4/freq_dist_{model_type}.pkl"
+                if not dist_path.exists():
                     raise ValueError(
-                        "Please build the token frequency distribution first via /data/C4/build_token_dist.sh"
+                        f"Please build the token frequency distribution first via {ROOT / 'data/C4/build_token_dist.sh'}"
                     )
                 with open(dist_path, "rb") as f:
                     freq_dist = pickle.load(f)
