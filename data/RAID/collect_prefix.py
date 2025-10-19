@@ -1,6 +1,16 @@
 import pandas as pd
+import os
+from raid.utils import load_data
+import random
 
-df_raid = pd.read_csv("./test_head.csv")
+random.seed(42)
+
+"""
+Note: In our paper, the original prefixes of ReCaLL for detection were retrieved from the confidential RAID-test set.
+In this public version, we instead use prefixes sampled from the RAID-train set, which is the test set in our paper.
+As the test set contains over 1,000 samples, this change is expected to have a negligible effect on the overall results.
+"""
+
 domains = [
     "abstracts",
     "books",
@@ -14,19 +24,39 @@ domains = [
 
 generators = ["chatgpt", "gpt4", "llama-chat", "gpt2", "mpt-chat"]
 
+raid_path = "/data/RAID/raid_train.pkl"
+if os.path.exists(raid_path):
+    train_df = pd.read_pickle(raid_path)
+else:
+    train_df = load_data(split="train")
+    with open(raid_path, "wb") as f:
+        pd.to_pickle(train_df, f)
+
+
 for domain in domains:
     for generator in generators:
-        df_machine = df_raid[
-            (df_raid["domain"] == domain) & (df_raid["model"] == generator)
-        ].reset_index(drop=True)
-        df_human = df_raid[
-            (df_raid["domain"] == domain) & (df_raid["model"] == "human")
-        ].reset_index(drop=True)
+        print(domain, generator)
+        humans = train_df[
+            (train_df["domain"] == domain)
+            & (train_df["model"] == "human")
+            & (train_df["attack"] == "none")
+        ]
+        machines = train_df[
+            (train_df["domain"] == domain)
+            & (train_df["model"] == generator)
+            & (train_df["repetition_penalty"] == "no")
+            & (train_df["attack"] == "none")
+            & (train_df["decoding"] == "sampling")
+        ]
 
-        positive_sample, negative_sample = (
-            df_machine["generation"].to_list()[:10],
-            df_human["generation"].to_list()[:10],
+        humans = humans.sample(frac=1, random_state=42)
+        machines = machines.sample(frac=1, random_state=42)
+
+        negative_sample, positive_sample = (
+            humans["generation"].to_list()[:10],
+            machines["generation"].to_list()[:10],
         )
-        d = {"positive_sample": positive_sample, "negative_sample": negative_sample}
+
+        d = {"negatives": negative_sample, "positives": positive_sample}
         df_samples = pd.DataFrame(d)
         df_samples.to_json(f"./Prefix/{domain}_{generator}_prefix.json")

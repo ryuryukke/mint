@@ -114,7 +114,7 @@ def collect_nonmember_and_member(domain: str, sample_size: int) -> dict:
             break
     print("End of nonmember sampling")
 
-    return {"positive_sample": new_members, "negative_sample": new_nonmembers}
+    return {"positives": new_members, "negatives": new_nonmembers}
 
 
 if __name__ == "__main__":
