@@ -1,7 +1,9 @@
 from datasets import load_dataset
 from itertools import islice
 import pandas as pd
-import pickle
+from pathlib import Path
+
+CURRENT_DIR = Path(__file__).parent
 
 pile_train = load_dataset("monology/pile-uncopyrighted", split="train", streaming=True)
 pile_train = pile_train.shuffle(buffer_size=10000, seed=42)
@@ -16,10 +18,9 @@ pile_test = load_dataset(
 
 pile_train_df, pile_test_df = pd.DataFrame(pile_train), pile_test.to_pandas()
 
-with open("./pile_train.pkl", "rb") as f:
-    pile_train_df = pickle.load(f)
+train_path = CURRENT_DIR / "pile_train.pkl"
+test_path = CURRENT_DIR / "pile_test.pkl"
+pile_train_df.to_pickle(train_path)
 print("end of pile_train_df.to_pickle")
-
-with open("./pile_test.pkl", "rb") as f:
-    pile_test_df = pickle.load(f)
+pile_test_df.to_pickle(test_path)
 print("end of pile_test_df.to_pickle")

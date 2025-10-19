@@ -2,12 +2,13 @@ from transformers import AutoTokenizer
 from datasets import load_dataset
 import requests
 import time
-import pickle
 import argparse
-import os
 from tqdm import tqdm
 import json
+from pathlib import Path
+import pandas as pd
 
+CURRENT_DIR = Path(__file__).parent
 
 INDEX = "v4_piletrain_llama"
 llama_tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
@@ -69,16 +70,13 @@ def calculate_overlap_ratio(text, n):
 def collect_nonmember_and_member(domain: str, sample_size: int) -> dict:
     new_members, new_nonmembers = [], []
 
-    with open(
-        "./pile_train.pkl",
-        "rb",
-    ) as f:
-        pile_train_df = pickle.load(f)
-    with open(
-        "./pile_test.pkl",
-        "rb",
-    ) as f:
-        pile_test_df = pickle.load(f)
+    train_path, test_path = (
+        CURRENT_DIR / "pile_train.pkl",
+        CURRENT_DIR / "pile_test.pkl",
+    )
+
+    pile_train_df = pd.read_pickle(train_path)
+    pile_test_df = pd.read_pickle(test_path)
 
     pile_origin_domain_name = mimir2pile[domain]
     pile_train_df = pile_train_df[
@@ -124,12 +122,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if not os.path.exists(f"./Prefix/{args.domain}_prefix.json"):
+    prefix_dir = CURRENT_DIR / "Prefix"
+    prefix_dir.mkdir(parents=True, exist_ok=True)
+    prefix_path = prefix_dir / f"{args.domain}_prefix.json"
+    if not prefix_path.exists():
         prefix = collect_nonmember_and_member(args.domain, args.sample_size)
-        with open(
-            f"./Prefix/{args.domain}_prefix.json",
-            "w",
-        ) as f:
-            json.dump(prefix, f)
+        prefix_path.write_text(json.dumps(prefix, ensure_ascii=False, indent=2))
     else:
         print(f"Prefix for {args.domain} already exists.")
