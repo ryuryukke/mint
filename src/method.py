@@ -1,19 +1,19 @@
-from models.loss.loss import Loss
-from models.likelihood.likelihood import Likelihood
-from models.entropy.entropy import Entropy
-from models.rank.rank import Rank
-from models.ref.ref import Reference
-from models.zlib.zlib import Zlib
-from models.min_k.min_k import MinK
-from models.min_k_plus.min_k_plus import MinKPlus
-from models.recall.recall import Recall
-from models.dc_pdd.dc_pdd import DCPDD
-from models.detectgpt.detectgpt import DetectGPT
-from models.fast_detectgpt.fast_detectgpt import FastDetectGPT
-from models.binoculars.binoculars import Binoculars
-from models.lastde_doubleplus.lastde_doubleplus import LastdeDoublePlus
-from models.multi_basic.multi_basic import MultiBasic
-from models.baselines.baselines import Baselines
+from methods.loss.loss import Loss
+from methods.likelihood.likelihood import Likelihood
+from methods.entropy.entropy import Entropy
+from methods.rank.rank import Rank
+from methods.ref.ref import Reference
+from methods.zlib.zlib import Zlib
+from methods.min_k.min_k import MinK
+from methods.min_k_plus.min_k_plus import MinKPlus
+from methods.recall.recall import Recall
+from methods.dc_pdd.dc_pdd import DCPDD
+from methods.detectgpt.detectgpt import DetectGPT
+from methods.fast_detectgpt.fast_detectgpt import FastDetectGPT
+from methods.binoculars.binoculars import Binoculars
+from methods.lastde_doubleplus.lastde_doubleplus import LastdeDoublePlus
+from methods.multi_basic.multi_basic import MultiBasic
+from methods.baselines.baselines import Baselines
 
 
 class Method:
