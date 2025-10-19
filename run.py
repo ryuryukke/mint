@@ -21,7 +21,7 @@ from src.config import (
     SMALLER_MODEL_NAME_MAP,
 )
 
-ROOT = Path(__file__).parent.parent
+ROOT = Path(__file__).parent
 DATA_DIR = ROOT / "data"
 RESULTS_DIR = ROOT / "results"
 
