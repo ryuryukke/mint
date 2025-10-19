@@ -12,13 +12,11 @@ file_num = 15
 max_tok = 1024
 
 model2short = {
-    "EleutherAI/pythia-160m": "pythia",
     "openai-community/gpt2-xl": "gpt2",
     "mosaicml/mpt-30b-chat": "mpt",
-    "mistralai/Mistral-7B-Instruct-v0.1": "mistral",
     "meta-llama/Llama-2-70b-chat-hf": "llama2",
+    "EleutherAI/pythia-160m": "pythia",
     "meta-llama/Llama-3.2-3B": "llama3",
-    "EleutherAI/gpt-j-6b": "gptj",
 }
 
 
@@ -58,6 +56,7 @@ if __name__ == "__main__":
     all_texts = collect_c4_texts()
 
     for base_model_name in model2short.keys():
+        print(f"Building a token distribution of C4 under the model: {base_model_name}")
         base_tokenizer = transformers.AutoTokenizer.from_pretrained(
             base_model_name, cache_dir=os.environ["HF_HOME"]
         )
