@@ -1,3 +1,6 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+
 # load the pile dataset
 python collect_pile.py
 

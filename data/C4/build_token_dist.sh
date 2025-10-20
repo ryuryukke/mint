@@ -1,3 +1,6 @@
+#!/bin/bash
+cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
+
 # retrieve C4 data (the file num 15 is a default of the original DC-PDD paper)
 for i in {0..14}; do
   fname=$(printf 'c4-train.%05d-of-01024.json.gz' "$i")
