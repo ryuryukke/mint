@@ -9,3 +9,5 @@ tiktoken==0.8.0
 torch==2.5.1
 tqdm==4.67.1
 transformers==4.47.0
+accelerate==1.6.0
+zstandard==0.25.0
