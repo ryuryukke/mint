@@ -12,7 +12,7 @@
 </b></i></h3>
 
 ## Quick Start
-Build environment:
+Build environment (Python>=3.9):
 ```
 $ git clone https://github.com/ryuryukke/mint.git
 $ cd mint
@@ -20,11 +20,15 @@ $ python -m venv env
 $ source env/bin/activate
 $ pip install -r requirements.txt
 ```
-Run evaluation on MIA or Detection:
+Run evaluation on all methods for MIA:
 ```
-$ python 
+$ python run.py --task mia --domain arxiv --methods all --model_name pythia-160m
 ```
-
+Run evaluation on all methods for detection:
+```
+$ python run.py --task detection --domain wiki --methods all --model_name llama-chat
+```
+Please see more details for options in ``scripts/*.sh``.
 
 ## MINT Supports
 We currently cover **4 common baselines**, **7 state-of-the-art MIAs**, and **5 state-of-the-art machine text detectors**. Please [submit an issue](https://github.com/ryuryukke/mint/issues/new) for more method support.
