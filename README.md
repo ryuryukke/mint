@@ -20,6 +20,12 @@ $ python -m venv env
 $ source env/bin/activate
 $ pip install -r requirements.txt
 ```
+
+Set your Hugging Face cache directory:
+```
+$ export HF_HOME=/path/to/huggingface_cache
+```
+
 Run evaluation on all methods for MIA:
 ```
 $ python run.py --task mia --domain arxiv --methods all --model_name pythia-160m
@@ -69,12 +75,11 @@ We employ the MIMIR benchmark for MIAs and the RAID benchmark for detection.
 
 
 
-## Running on your own dataset
-You can add your own dataset by ...
+## Running on a custom dataset
+You can add a custom dataset by adding new if-else block to ``load_evaluation_data()`` in ``run.py``.
 
-## Running your own attack or detector
-You can add your own attack / detector by ...
-
+## Running a custom attack or detector
+You can add a custom attack or detector by creating a new directory under `methods/` and registering it in `src/method.py`. Please follow the shared format defined in `src/method.py`.
 
 ## Citation
 If you find our code or ideas useful in your research, please cite our work:
