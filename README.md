@@ -5,7 +5,7 @@
   <a href="https://github.com/liamdugan/raid/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg"/></a>
   <a href="https://ryuryukke.github.io/"><img src="https://img.shields.io/badge/NLP-NLP?label=Institute%20of%20Science%20Tokyo"/></a>
   <a href="https://liamdugan.com/"><img src="https://img.shields.io/badge/NLP-NLP?label=University%20of%20Pennsylvania"/></a>
-  <a href="https://arxiv.org/abs/xxxxx.xxxxx"><img src="https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg"/></a>
+  <a href="https://arxiv.org/abs/2510.19492"><img src="https://img.shields.io/badge/arXiv-2510.19492-b31b1b.svg"/></a>
 </p>
 <h3 align="center"><i><b>
 "A unified evaluation suite for membership inference attacks<br>and machine-generated text detection."
@@ -88,10 +88,10 @@ If you find our code or ideas useful in your research, please cite our work:
       title={Machine Text Detectors are Membership Inference Attacks}, 
       author={Ryuto Koike and Liam Dugan and Masahiro Kaneko and Chris Callison-Burch and Naoaki Okazaki},
       year={2025},
-      eprint={xxxx.xxxxx},
+      eprint={2510.19492},
       archivePrefix={arXiv},
       primaryClass={cs.CL},
-      url={https://arxiv.org/abs/xxxx.xxxxx}, 
+      url={https://arxiv.org/abs/2510.19492}, 
 }
 ```
 
