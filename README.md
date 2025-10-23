@@ -84,7 +84,7 @@ You can add a custom attack or detector by creating a new directory under `metho
 ## Citation
 If you find our code or ideas useful in your research, please cite our work:
 ```
-@misc{koike2025machinetextdetectors,
+@misc{koike2025machinetextdetectorsmembership,
       title={Machine Text Detectors are Membership Inference Attacks}, 
       author={Ryuto Koike and Liam Dugan and Masahiro Kaneko and Chris Callison-Burch and Naoaki Okazaki},
       year={2025},
